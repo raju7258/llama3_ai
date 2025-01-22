@@ -33,7 +33,7 @@ jobs:
         with:
           terraform_version: latest
       - name: Terraform Format
-        run: terraform fmt -check
+        run: terraform fmt --recursive
       # - name: Install Aquasec tfsec
       #   uses: tfsec/tfsec-sarif-action@v0.0.3
       #   with:
