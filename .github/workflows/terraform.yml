@@ -19,10 +19,10 @@ jobs:
           sudo ./aws/install --update
       - name: Assume IAM Role
         run: |
-          aws sts assume-role --role-arn arn:aws:iam::853602029602:role/Local_AI --role-session-name terraform
-          export AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID | jq -r .Credentials.AccessKeyId)
-          export AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY | jq -r .Credentials.SecretAccessKey)
-          export AWS_SESSION_TOKEN=$(echo $AWS_SESSION_TOKEN | jq -r .Credentials.SessionToken)
+          CREDS=$(aws sts assume-role --role-arn arn:aws:iam::853602029602:role/Local_AI --role-session-name terraform | jq -r '.Credentials')
+          export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
+          export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
+          export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
       - name: Setup Terraform latest version
         uses: hashicorp/setup-terraform@v1
         with:
