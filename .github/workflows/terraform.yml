@@ -23,6 +23,7 @@ jobs:
       - name: Assume IAM Role
         run: |
           CREDS=$(aws sts assume-role --role-arn arn:aws:iam::853602029602:role/Local_AI --role-session-name terraform | jq -r '.Credentials')
+          echo $CREDS
           export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
           export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
           export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
