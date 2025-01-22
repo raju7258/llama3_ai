@@ -17,17 +17,12 @@ jobs:
           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
           unzip awscliv2.zip
           sudo ./aws/install --update
-      # - name: Assume IAM Role
-      #   run: |
-      #     CREDS=$(aws sts assume-role --role-arn arn:aws:iam::853602029602:role/Local_AI --role-session-name terraform | jq -r '.Credentials')
-      #     export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
-      #     export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
-      #     export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: arn:aws:iam::853602029602:role/Local_AI
-          aws-region: us-east-1
+      - name: Assume IAM Role
+        run: |
+          CREDS=$(aws sts assume-role --role-arn arn:aws:iam::853602029602:role/Local_AI --role-session-name terraform | jq -r '.Credentials')
+          export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
+          export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
+          export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
       - name: Setup Terraform latest version
         uses: hashicorp/setup-terraform@v1
         with:
