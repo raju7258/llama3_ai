@@ -23,18 +23,18 @@ jobs:
           export AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
           export AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
           export AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
+          aws sts get-caller-identity
       - name: Setup Terraform latest version
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: latest
-      - name: Terraform Format
-        run: terraform fmt --recursive
-      # - name: Install Aquasec tfsec
-      #   uses: tfsec/tfsec-sarif-action@v0.0.3
-      #   with:
-      #     tfsec_version: latest
-      #   run: |
-      #     go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+      - name: Install Aquasec tfsec for Terraform Security Scanning
+        uses: tfsec/tfsec-sarif-action@v0.0.3
+        with:
+          tfsec_version: latest
+          run: 
+            tfsec --config-file tfsec.yml
+            tfsec .
       - name: Terraform Init
         run: terraform init
       - name: Terraform Plan
