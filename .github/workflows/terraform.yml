@@ -1,0 +1,42 @@
+name : 'Terraform'
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+      - name: Assume IAM Role
+        run: |
+          aws sts assume-role --role-arn arn:aws:iam::123456789012:role/terraform --role-session-name terraform
+          export AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID | jq -r .Credentials.AccessKeyId)
+          export AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY | jq -r .Credentials.SecretAccessKey)
+          export AWS_SESSION_TOKEN=$(echo $AWS_SESSION_TOKEN | jq -r .Credentials.SessionToken)
+      - name: Setup Terraform latest version
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: latest
+      - name: Terraform Format
+        run: terraform fmt -check
+      # - name: Install Aquasec tfsec
+      #   uses: tfsec/tfsec-sarif-action@v0.0.3
+      #   with:
+      #     tfsec_version: latest
+      #   run: |
+      #     go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Plan
+        run: terraform plan
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
