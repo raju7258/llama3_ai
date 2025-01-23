@@ -41,9 +41,10 @@ jobs:
           export PATH=$PATH:/usr/local/go/bin
       - name: Install Aquasec tfsec
         run: 
-          go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
       - name: Terraform Scanning
-        run: tfsec
+        run: 
+          tfsec .
       - name: Terraform Init
         run: terraform init
       - name: Terraform Plan
