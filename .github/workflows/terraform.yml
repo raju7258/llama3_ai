@@ -42,6 +42,7 @@ jobs:
       - name: Install Aquasec tfsec for Terraform Security Scanning
         run: 
           go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+          go clean -modcache
           tfsec
       - name: Terraform Init
         run: terraform init
