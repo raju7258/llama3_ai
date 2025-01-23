@@ -41,8 +41,8 @@ jobs:
           export PATH=$PATH:/usr/local/go/bin
       - name: Install Aquasec tfsec for Terraform Security Scanning
         run: 
-          sudo apt-get install tfsec
-          tfsec .
+          go install github.com/aquasecurity/tfsec/cmd/tfsec@latest
+          tfsec
       - name: Terraform Init
         run: terraform init
       - name: Terraform Plan
